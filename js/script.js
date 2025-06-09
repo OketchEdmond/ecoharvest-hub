@@ -45,4 +45,58 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
   });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const chatInput = document.querySelector('.chat-input');
+    const sendBtn = document.querySelector('.send-button');
+    const assistantBox = document.querySelector('.assistant-box');
+  
+    sendBtn.addEventListener('click', () => {
+      const msg = chatInput.value.trim();
+      if (msg) {
+        const userMsg = document.createElement('p');
+        userMsg.innerHTML = `<strong>User:</strong> ${msg}`;
+        assistantBox.appendChild(userMsg);
+  
+        const botMsg = document.createElement('p');
+        botMsg.innerHTML = `<strong>Assistant:</strong> Thank you! We are checking available produce near you.`;
+        assistantBox.appendChild(botMsg);
+  
+        chatInput.value = '';
+      }
+    });
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.querySelector('.hamburger-menu');
+    const navLinks = document.querySelector('.nav-links');
+  
+    if (hamburger && navLinks) {
+      hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+      });
+    }
+  
+    const sendBtn = document.querySelector('.send-button');
+    const chatInput = document.querySelector('.chat-input');
+    const assistantBox = document.querySelector('.assistant-box');
+  
+    if (sendBtn && chatInput && assistantBox) {
+      sendBtn.addEventListener('click', () => {
+        const msg = chatInput.value.trim();
+        if (msg) {
+          const userMsg = document.createElement('p');
+          userMsg.innerHTML = `<strong>User:</strong> ${msg}`;
+          assistantBox.appendChild(userMsg);
+  
+          const botMsg = document.createElement('p');
+          botMsg.innerHTML = `<strong>Assistant:</strong> We're locating farms near you that offer: ${msg}.`;
+          assistantBox.appendChild(botMsg);
+  
+          chatInput.value = '';
+          assistantBox.scrollTop = assistantBox.scrollHeight;
+        }
+      });
+    }
+  });
+    
   
