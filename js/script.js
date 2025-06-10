@@ -138,50 +138,49 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 <script>
-  const context = `
-EcoHarvest Hub, founded by Edmond Oketch in Nairobi, bridges the gap between small-scale farmers and urban consumers. Its flagship tools include the CropConnect App, which connects farmers directly to buyers, and the Agri-Insights Dashboard for real-time weather, market, and sustainability data. With support from CTO Ray Odhiambo and outreach lead Shiko Maina, EcoHarvest is empowering farmers, reducing waste, and building a climate-smart food system in Kenya.
-  `;
+  const chatbox = document.getElementById('chatbox');
+  const userInput = document.getElementById('userInput');
+  const sendButton = document.getElementById('sendButton');
 
-  const chatWindow = document.getElementById('chat-window');
-  const chatInput = document.getElementById('chat-input');
-  const chatSend = document.getElementById('chat-send');
-
-  function appendMessage(sender, text) {
-    const div = document.createElement('div');
-    div.style.marginBottom = '10px';
-    div.innerHTML = `<strong>${sender}:</strong> ${text}`;
-    chatWindow.appendChild(div);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
+  async function fetchContext() {
+    const response = await fetch('context.txt');
+    return await response.text();
   }
 
-  chatSend.addEventListener('click', async () => {
-    const userMessage = chatInput.value.trim();
-    if (!userMessage) {
-      appendMessage('System', '⚠️ Please enter a question.');
-      return;
-    }
+  async function sendMessage(message) {
+    const context = await fetchContext();
+    const response = await puter.ai.chat({
+      system: context,
+      messages: [{ role: 'user', content: message }],
+    });
+    displayMessage('User', message);
+    displayMessage('Assistant', response.message.content);
+  }
 
-    appendMessage('You', userMessage);
-    chatInput.value = '';
+  function displayMessage(sender, message) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('chat-message', sender.toLowerCase());
+    messageElement.textContent = `${sender}: ${message}`;
+    chatbox.appendChild(messageElement);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
 
-    try {
-      const response = await puter.ai.chat({
-        messages: [
-          { role: 'system', content: context },
-          { role: 'user', content: userMessage }
-        ]
-      });
-      appendMessage('EcoBot', response.message);
-    } catch (err) {
-      appendMessage('System', '⚠️ There was an error. Please try again later.');
-      console.error(err);
+  function askQuestion(question) {
+    userInput.value = question;
+    sendMessage(question);
+  }
+
+  sendButton.addEventListener('click', () => {
+    const message = userInput.value.trim();
+    if (message) {
+      sendMessage(message);
+      userInput.value = '';
     }
   });
 
-  document.querySelectorAll('.sample-question').forEach(button => {
-    button.addEventListener('click', () => {
-      chatInput.value = button.textContent;
-      chatSend.click();
-    });
+  userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendButton.click();
+    }
   });
 </script>
