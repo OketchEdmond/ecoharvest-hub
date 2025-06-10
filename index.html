@@ -199,30 +199,40 @@
     </div>
         </section>
 
-        <section id="chatbot-section" class="chatbot-section" style="background-color: #f1f8e9; padding: 40px 20px;">
-            <div class="container" style="max-width: 700px; margin: 0 auto;">
-              <h2 class="section-title" style="text-align: center; color: #2e7d32;">Ask EcoBot</h2>
-              <p style="text-align: center;">Ask our AI about our story, services, or how you can get involved.</p>
+        <section id="chatbot-section" class="chatbot-section">
+            <div class="container chatbot-wrapper">
+              <!-- title bar -->
+              <header class="chatbot-header">
+                <i class="fa-solid fa-robot"></i>
+                <span>CHATBOT</span>
+              </header>
           
-              <div id="chat-window" style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; background: white; margin-top: 20px; height: 300px; overflow-y: auto;"></div>
+              <!-- chat card -->
+              <section class="chatbot-body">
+                <!-- bot greeting -->
+                <p class="bot-message">
+                  Hello! I'm the Smart Study Circle assistant.<br />
+                  How may I help you today?
+                </p>
           
-              <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <input type="text" id="chat-input" placeholder="Type your question..." style="flex-grow: 1; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
-                <button id="chat-send" style="background-color: #6bb74a; color: white; border: none; padding: 10px 20px; border-radius: 4px;">Send</button>
-              </div>
-          
-              <div style="margin-top: 15px; text-align: center;">
-                <p><strong>Try asking:</strong></p>
-                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px;">
-                  <button class="sample-question">Who founded the startup?</button>
-                  <button class="sample-question">What problem do you solve?</button>
-                  <button class="sample-question">What are your main products?</button>
-                  <button class="sample-question">How do I support you?</button>
-                  <button class="sample-question">What’s your long-term goal?</button>
+                <!-- typing indicator -->
+                <div class="typing-indicator" aria-hidden="true">
+                  <span></span><span></span><span></span>
                 </div>
-              </div>
+          
+                <!-- input row -->
+                <form class="message-box" onsubmit="return false;">
+                  <input
+                    type="text"
+                    placeholder="TYPE MESSAGE"
+                    aria-label="Type your message"
+                  />
+                  <button type="submit">SEND</button>
+                </form>
+              </section>
             </div>
           </section>
+          
           
           
 
