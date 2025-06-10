@@ -136,3 +136,52 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
+<script>
+  const context = `
+EcoHarvest Hub, founded by Edmond Oketch in Nairobi, bridges the gap between small-scale farmers and urban consumers. Its flagship tools include the CropConnect App, which connects farmers directly to buyers, and the Agri-Insights Dashboard for real-time weather, market, and sustainability data. With support from CTO Ray Odhiambo and outreach lead Shiko Maina, EcoHarvest is empowering farmers, reducing waste, and building a climate-smart food system in Kenya.
+  `;
+
+  const chatWindow = document.getElementById('chat-window');
+  const chatInput = document.getElementById('chat-input');
+  const chatSend = document.getElementById('chat-send');
+
+  function appendMessage(sender, text) {
+    const div = document.createElement('div');
+    div.style.marginBottom = '10px';
+    div.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    chatWindow.appendChild(div);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  chatSend.addEventListener('click', async () => {
+    const userMessage = chatInput.value.trim();
+    if (!userMessage) {
+      appendMessage('System', '⚠️ Please enter a question.');
+      return;
+    }
+
+    appendMessage('You', userMessage);
+    chatInput.value = '';
+
+    try {
+      const response = await puter.ai.chat({
+        messages: [
+          { role: 'system', content: context },
+          { role: 'user', content: userMessage }
+        ]
+      });
+      appendMessage('EcoBot', response.message);
+    } catch (err) {
+      appendMessage('System', '⚠️ There was an error. Please try again later.');
+      console.error(err);
+    }
+  });
+
+  document.querySelectorAll('.sample-question').forEach(button => {
+    button.addEventListener('click', () => {
+      chatInput.value = button.textContent;
+      chatSend.click();
+    });
+  });
+</script>
