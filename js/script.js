@@ -148,10 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- 4. AI Chatbot Integration (Puter.js) ---
-  const chatInput = document.getElementById('chat-input');
-  const sendButton = document.getElementById('send-button');
-  const messageArea = document.getElementById('message-area');
-  const typingDots = document.getElementById('typing-dots');
+  const chatInput = document.querySelector('.chat-input');
+  const sendButton = document.querySelector('.send-button');
+  const messageArea = document.querySelector('.message-area');
+  const typingDots = document.querySelector('.typing-dots');
   const sampleQuestionButtons = document.querySelectorAll('.sample-q-button');
 
   // Define the system prompt with detailed context about EcoHarvest Hub
@@ -195,14 +195,49 @@ Please answer questions accurately and concisely based ONLY on the information p
   }
 
   // Function to show/hide typing dots
-  function showTypingDots() {
+  /*function showTypingDots() {
       typingDots.style.display = 'flex';
       messageArea.scrollTop = messageArea.scrollHeight; // Scroll to show dots
   }
 
   function hideTypingDots() {
       typingDots.style.display = 'none';
-  }
+  }*/
+ 
+  // Initially hide the typing indicator
+      toggleTypingIndicator(false);
+              
+      // Function to show/hide typing indicator
+      function toggleTypingIndicator(show) {
+          if (typingDots) {
+              if (show) {
+                  typingDots.style.display = 'flex';
+                  messageArea.appendChild(typingDots); // move to bottom
+              } else {
+                  typingDots.style.display = 'none';
+              }
+              messageArea.scrollTop = messageArea.scrollHeight; // e
+            }
+        }
+        function addBubble(text, side = "right") {
+            const bubble = document.createElement("div");
+            bubble.className = `chatbot-bubble chatbot-bubble-${side}`;
+            bubble.textContent = text;
+    
+            const messageArea = document.querySelector(".message-area");
+            const typingDots = document.getElementById("typing-dots");
+    
+            if (typingDots && typingDots.parentNode === messageArea) {
+                messageArea.insertBefore(bubble, typingDots);
+            } else {
+                messageArea.appendChild(bubble);
+        }
+
+        // Scroll to bottom
+        setTimeout(() => {
+            messageArea.scrollTop = messageArea.scrollHeight;
+        }, 50);
+    }
 
   // Function to send message and get AI response
   async function sendMessage() {
@@ -216,13 +251,14 @@ Please answer questions accurately and concisely based ONLY on the information p
       sendButton.disabled = true; // Disable send button while AI is thinking
       chatInput.disabled = true; // Disable input field
 
-      showTypingDots();
+      //showTypingDots();
+      toggleTypingIndicator(true)
 
       try {
           // Puter.js chat function
           const response = await puter.ai.chat(userMessage, {
               system_prompt: systemPrompt,
-              model: "gemma-2b-it", // You can experiment with models if Puter.js supports others
+// You can experiment with models if Puter.js supports others
           });
 
           addMessage(response, 'ai');
@@ -230,7 +266,7 @@ Please answer questions accurately and concisely based ONLY on the information p
           console.error('Puter.js AI chat error:', error);
           addMessage('Oops! It seems I\'m having trouble connecting right now. Please try again later or contact us directly at info@ecoharvesthub.com.', 'ai');
       } finally {
-          hideTypingDots();
+          //hideTypingDots();
           sendButton.disabled = false; // Re-enable send button
           chatInput.disabled = false; // Re-enable input field
           chatInput.focus(); // Focus input for next message
@@ -300,7 +336,7 @@ Please answer questions accurately and concisely based ONLY on the information p
       const messageDiv = document.createElement('div');
       messageDiv.classList.add('message');
       messageDiv.classList.add(sender === 'user' ? 'user-message' : 'ai-message');
-      messageDiv.innerHTML = <p>${text}</p>; // Use innerHTML for simple paragraph
+      messageDiv.innerHTML = `<p>${text}</p>`; // Use innerHTML for simple paragraph
       messageArea.appendChild(messageDiv);
       messageArea.scrollTop = messageArea.scrollHeight; // Scroll to bottom
   }
