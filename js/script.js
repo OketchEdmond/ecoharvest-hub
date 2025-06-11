@@ -254,3 +254,153 @@ Please answer questions accurately and concisely based ONLY on the information p
   });
 
 });
+
+
+
+// --- 4. AI Chatbot Integration (Puter.js) ---
+  const sendButton = document.querySelector('.send-button');
+  const chatInput = document.querySelector('.chat-input');
+  const messageArea = document.querySelector('.message-area');
+  const typingDots = document.querySelector('.typing-dots');
+    
+  const sampleQuestionButtons = document.querySelectorAll('.sample-q-button');
+
+  // Define the system prompt with detailed context about EcoHarvest Hub
+  const systemPrompt = `You are EcoHarvest Assistant, an AI chatbot representing EcoHarvest Hub, a startup based in Nairobi, Kenya. Your purpose is to provide helpful and accurate information about the company in a friendly, empowering, and connected tone, reflecting our brand values: Sustainable, Empowering, Connected.
+
+    Here's detailed information about EcoHarvest Hub:
+
+    Origin Story & Founder: EcoHarvest Hub was founded by Edmond Oketch to bridge the gap between small-scale farmers and consumers in Nairobi. Before our platform, fresh produce often went to waste due to farmers' lack of market access, while consumers struggled to find affordable, local, fresh food. Edmond created EcoHarvest Hub to solve this problem.
+
+    Mission: Our mission is to create a thriving ecosystem where agriculture is sustainable, farmers are empowered, and communities are deeply connected to their food sources, leading to food security and economic growth across Kenya. We aim to be the leading platform for local food distribution in Nairobi and beyond.
+
+    Services & Products:
+    1. CropConnect App: A mobile application that directly connects small-scale farmers with consumers. Farmers can list their produce, and consumers can browse and buy directly, ensuring fair prices for farmers and fresh produce for buyers. It features a Dynamic Pricing Algorithm driven by AI data analysis, which ensures fair pricing based on real-time market demand and supply, boosting farmer income by up to 20% and reducing food waste.
+    2. Agri-Insights Dashboard: A powerful tool providing real-time market data, weather updates, and sustainable farming tips to farmers. It includes Climate-Smart Advisory, which uses meteorological data and expert systems to offer personalized, actionable advice on planting and crop choices, helping farmers adapt to weather changes and reduce crop loss by 15%.
+    3. Eco-Logistics Network: An efficient and sustainable farm-to-door delivery system. It uses Optimized Route Planning with geospatial mapping and AI optimization to reduce transportation costs and carbon emissions, ensuring fresher produce reaches consumers faster and more affordably.
+
+    Team:
+    - Edmond Oketch: Founder and CEO. Leads strategic vision, product development, and community engagement.
+    - Ray Odhiambo: Chief Technology Officer (CTO). Architect of CropConnect App and Agri-Insights Dashboard, ensures robust and user-friendly technology.
+    - Shiko Maina: Head of Farmer Outreach. Builds relationships with farmers, provides training, and ensures platform meets their needs.
+
+    Vision/Long-term Goal: Our vision is to create a thriving ecosystem where agriculture is sustainable, farmers are empowered, and communities are deeply connected to their food sources, leading to food security and economic growth across Kenya. We aim to be the leading platform for local food distribution in Nairobi and beyond.
+
+    How to Support or Contact Us:
+    - Contact Form: Users can send messages directly through the 'CONTACT US' section on our website.
+    - Email: You can reach us at info@ecoharvesthub.com.
+    - Social Media: We are active on Facebook, Instagram, Twitter (X), LinkedIn, and WhatsApp (links available in the footer).
+    - Get Involved: Explore our products (CropConnect App) to buy local produce, or farmers can sign up to sell their harvests.
+
+    Please answer questions accurately and concisely based ONLY on the information provided above. If you don't know the answer based on this context, politely state that you cannot answer.`;
+
+
+  // Function to add a message to the chat display
+  function addMessage(text, sender) {
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message');
+      messageDiv.classList.add(sender === 'user' ? 'user-message' : 'ai-message');
+      messageDiv.innerHTML = <p>${text}</p>; // Use innerHTML for simple paragraph
+      messageArea.appendChild(messageDiv);
+      messageArea.scrollTop = messageArea.scrollHeight; // Scroll to bottom
+  }
+
+  // Function to show/hide typing dots
+  /*function showTypingDots() {
+      typingDots.style.display = 'flex';
+      messageArea.scrollTop = messageArea.scrollHeight; // Scroll to show dots
+  }
+
+  function hideTypingDots() {
+      typingDots.style.display = 'none';
+  }*/
+
+      // Initially hide the typing indicator
+    toggleTypingIndicator(false);
+            
+    // Function to show/hide typing indicator
+    function toggleTypingIndicator(show) {
+        if (typingDots) {
+            if (show) {
+                typingDots.style.display = 'flex';
+                messageArea.appendChild(typingDots); // move to bottom
+            } else {
+                typingDots.style.display = 'none';
+            }
+            messageArea.scrollTop = messageArea.scrollHeight; // ensure scroll
+        }
+    }
+    
+
+    function addBubble(text, side = "right") {
+        const bubble = document.createElement("div");
+        bubble.className = chatbot-bubble-chatbot -bubble-$ 
+        { side};
+        bubble.textContent = text;
+
+        const messageArea = document.querySelector(".message-area");
+        const typingDots = document.getElementById("typing-dots");
+
+        if (typingDots && typingDots.parentNode === messageArea) {
+            messageArea.insertBefore(bubble, typingDots);
+        } else {
+            messageArea.appendChild(bubble);
+        }
+
+        // Scroll to bottom
+        setTimeout(() => {
+            messageArea.scrollTop = messageArea.scrollHeight;
+        }, 50);
+    }
+
+
+  // Function to send message and get AI response
+  async function sendMessage() {
+      const userMessage = chatInput.value.trim();
+      if (userMessage === '') {
+          return; // Don't send empty messages
+      }
+
+      addMessage(userMessage, 'user');
+      chatInput.value = ''; // Clear input field
+      sendButton.disabled = true; // Disable send button while AI is thinking
+      chatInput.disabled = true; // Disable input field
+
+      //showTypingDots();
+      toggleTypingIndicator(true); // Show typing indicator
+
+      try {
+          // Puter.js chat function
+          const response = await puter.ai.chat(userMessage, {
+              system_prompt: systemPrompt
+          });
+
+          addMessage(response, 'ai');
+      } catch (error) {
+          console.error('Puter.js AI chat error:', error);
+          addMessage('Oops! It seems I\'m having trouble connecting right now. Please try again later or contact us directly at info@ecoharvesthub.com.', 'ai');
+      } finally {
+          //hideTypingDots();
+          toggleTypingIndicator(false); // Hide typing indicator
+          sendButton.disabled = false; // Re-enable send button
+          chatInput.disabled = false; // Re-enable input field
+          chatInput.focus(); // Focus input for next message
+      }
+  }
+
+  // Event listeners for sending message
+  sendButton.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+          sendMessage();
+      }
+  });
+
+  // Event listeners for sample question buttons
+  sampleQuestionButtons.forEach(button => {
+      button.addEventListener('click', () => {
+          chatInput.value = button.dataset.question; // Populate input with question
+          sendMessage(); // Send the question
+      });
+  });
+
