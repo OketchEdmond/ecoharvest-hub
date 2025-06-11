@@ -783,7 +783,6 @@ body {
   width: 100%;
   background-color: #F0F0F0;
   font-weight: 500;
-  text-transform: uppercase;
 }
 .form-group input::placeholder,
 .form-group textarea::placeholder {

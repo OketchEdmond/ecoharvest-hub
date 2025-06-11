@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           if (isValid) {
-              alert('Form submitted successfully! (This is a demo, no actual submission occurs)');
+              alert('Form submitted successfully! We will review the submission as soon as possible.👍');
               contactForm.reset();
           }
       });
