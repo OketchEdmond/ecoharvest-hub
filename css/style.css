@@ -167,7 +167,7 @@ body {
 }
 
 .hero-section {
-  background-image: url('../images/hero-background.jpg');
+  background-image: url(/logo.jpg);
   background-size: cover;
   background-position: center;
   min-height: 700px;
