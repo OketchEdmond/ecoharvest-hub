@@ -1,186 +1,146 @@
-// === EcoHarvest Hub JS ===
+document.addEventListener('DOMContentLoaded', () => {
+  const hamburgerMenu = document.querySelector('.hamburger-menu');
+  const navLinks = document.querySelector('.main-nav .nav-links');
 
-// Load Puter.js
-const script = document.createElement('script');
-script.src = "https://js.puter.com/v2/";
-document.head.appendChild(script);
-
-// Initialize after DOM load
-window.addEventListener("DOMContentLoaded", () => {
-
-  // Audience Toggle
-  const studentBtn = document.getElementById("studentBtn");
-  const mentorBtn = document.getElementById("mentorBtn");
-  const studentContent = document.getElementById("studentContent");
-  const mentorContent = document.getElementById("mentorContent");
-
-  if (studentBtn && mentorBtn && studentContent && mentorContent) {
-    studentBtn.addEventListener("click", () => {
-      studentContent.style.display = "block";
-      mentorContent.style.display = "none";
-    });
-
-    mentorBtn.addEventListener("click", () => {
-      studentContent.style.display = "none";
-      mentorContent.style.display = "block";
-    });
-  }
-
-  // FAQ Accordion
-  const questions = document.querySelectorAll(".faq-question");
-  questions.forEach((q) => {
-    q.addEventListener("click", () => {
-      const answer = q.nextElementSibling;
-      const isVisible = answer.style.display === "block";
-
-      document.querySelectorAll(".faq-answer").forEach((a) => a.style.display = "none");
-      if (!isVisible) answer.style.display = "block";
-    });
-  });
-
-  // Visitor Counter
-  const counter = localStorage.getItem("visitCount") || 0;
-  const updatedCount = parseInt(counter) + 1;
-  localStorage.setItem("visitCount", updatedCount);
-  const counterDisplay = document.getElementById("visitorCount");
-  if (counterDisplay) counterDisplay.textContent = updatedCount;
-
-  // Dark/Light Mode
-  const toggleBtn = document.getElementById("themeToggle");
-  const body = document.body;
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "dark") body.classList.add("dark-mode");
-
-  if (toggleBtn) {
-    toggleBtn.addEventListener("click", () => {
-      body.classList.toggle("dark-mode");
-      localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
-    });
-  }
-
-  // Smooth Scroll
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      document.querySelector(this.getAttribute('href')).scrollIntoView({
-        behavior: 'smooth'
+  if (hamburgerMenu && navLinks) {
+      hamburgerMenu.addEventListener('click', () => {
+          navLinks.classList.toggle('active');
+          hamburgerMenu.classList.toggle('open');
+          document.body.classList.toggle('no-scroll');
       });
-    });
-  });
 
-  // Contact Form
-  const form = document.querySelector(".contact form");
-  if (form) {
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      const name = form.querySelector("input[name='name']");
-      const email = form.querySelector("input[name='email']");
-      const message = form.querySelector("textarea[name='message']");
+      navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+              navLinks.classList.remove('active');
+              hamburgerMenu.classList.remove('open');
+              document.body.classList.remove('no-scroll');
+          });
+      });
+  }
 
-      if (!name.value || !email.value || !message.value || !email.value.includes("@")) {
-        alert("Please fill all fields correctly.");
-        return;
+  const carouselContainer = document.querySelector('.product-cards-container');
+  const leftArrow = document.querySelector('.carousel-arrow.left-arrow');
+  const rightArrow = document.querySelector('.carousel-arrow.right-arrow');
+  const paginationDots = document.querySelectorAll('.carousel-pagination .dot');
+  const productCards = document.querySelectorAll('.product-card');
+
+  if (carouselContainer && productCards.length > 0) {
+      const cardWidth = productCards[0].offsetWidth + 32;
+      let currentIndex = 0;
+
+      const updateCarousel = () => {
+          carouselContainer.scrollTo({
+              left: currentIndex * cardWidth,
+              behavior: 'smooth'
+          });
+
+          paginationDots.forEach((dot, index) => {
+              dot.classList.toggle('active', index === currentIndex);
+          });
+      };
+
+      if (rightArrow) {
+          rightArrow.addEventListener('click', () => {
+              currentIndex = (currentIndex + 1) % productCards.length;
+              updateCarousel();
+          });
       }
 
-      alert("Message sent successfully!");
-      form.reset();
-    });
-  }
+      if (leftArrow) {
+          leftArrow.addEventListener('click', () => {
+              currentIndex = (currentIndex - 1 + productCards.length) % productCards.length;
+              updateCarousel();
+          });
+      }
 
-  // === Puter Chatbot ===
-  const chatInput = document.getElementById("chatInput");
-  const chatBtn = document.getElementById("sendMessageBtn");
-  const chatBox = document.getElementById("chatMessages");
-
-  const startupContext = `
-    EcoHarvest Hub was founded by Edmond Oketch. Our mission is to bridge small-scale farmers in Kenya to city consumers using apps like CropConnect and tools like Agri-Insights Dashboard. We aim to eliminate food waste, improve farmer income, and promote sustainability. Reach us at info@ecoharvesthub.com. Our vision is a resilient, transparent food ecosystem.
-  `;
-
-  const addMessage = (msg, sender) => {
-    const div = document.createElement("div");
-    div.className = `message ${sender}-message`;
-    div.innerHTML = `<p>${msg}</p>`;
-    chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  };
-
-  if (chatBtn && chatInput && chatBox) {
-    chatBtn.addEventListener("click", () => {
-      const userMsg = chatInput.value.trim();
-      if (!userMsg) return;
-
-      addMessage(userMsg, "user");
-      chatInput.value = "";
-
-      puter.ai.chat({
-        messages: [
-          { role: "system", content: startupContext },
-          { role: "user", content: userMsg }
-        ]
-      }).then(res => {
-        const reply = res.choices?.[0]?.message?.content || "Sorry, I didn't understand that.";
-        addMessage(reply, "assistant");
-      }).catch(() => {
-        addMessage("Oops! Something went wrong. Please try again later.", "assistant");
+      paginationDots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+              currentIndex = index;
+              updateCarousel();
+          });
       });
-    });
+
+      carouselContainer.addEventListener('scroll', () => {
+          const scrollLeft = carouselContainer.scrollLeft;
+          currentIndex = Math.round(scrollLeft / cardWidth);
+          paginationDots.forEach((dot, index) => {
+              dot.classList.toggle('active', index === currentIndex);
+          });
+      });
+
+      updateCarousel();
   }
 
-  // Arrange product cards in a row
-  const productCards = document.querySelector(".product-cards");
-  if (productCards) {
-    productCards.style.display = "flex";
-    productCards.style.flexWrap = "nowrap";
-    productCards.style.overflowX = "auto";
-    productCards.style.gap = "20px";
-  }
+  const contactForm = document.querySelector('.contact-form');
 
+  if (contactForm) {
+      contactForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+
+          const nameInput = document.getElementById('name');
+          const emailInput = document.getElementById('email');
+          const messageInput = document.getElementById('message');
+
+          let isValid = true;
+
+          if (nameInput.value.trim() === '') {
+              displayError(nameInput, 'Name is required.');
+              isValid = false;
+          } else {
+              clearError(nameInput);
+          }
+
+          if (emailInput.value.trim() === '') {
+              displayError(emailInput, 'Email is required.');
+              isValid = false;
+          } else if (!isValidEmail(emailInput.value.trim())) {
+              displayError(emailInput, 'Please enter a valid email address.');
+              isValid = false;
+          } else {
+              clearError(emailInput);
+          }
+
+          if (messageInput.value.trim() === '') {
+              displayError(messageInput, 'Message is required.');
+              isValid = false;
+          } else if (messageInput.value.trim().length < 10) {
+              displayError(messageInput, 'Message must be at least 10 characters long.');
+              isValid = false;
+          } else {
+              clearError(messageInput);
+          }
+
+          if (isValid) {
+              alert('Form submitted successfully! (This is a demo, no actual submission occurs)');
+              contactForm.reset();
+          }
+      });
+
+      function displayError(inputElement, message) {
+          let errorElement = inputElement.nextElementSibling;
+          if (!errorElement || !errorElement.classList.contains('error-message')) {
+              errorElement = document.createElement('span');
+              errorElement.classList.add('error-message');
+              inputElement.parentNode.insertBefore(errorElement, inputElement.nextSibling);
+          }
+          errorElement.textContent = message;
+          errorElement.style.color = 'red';
+          errorElement.style.fontSize = '0.9em';
+          errorElement.style.marginTop = '5px';
+          inputElement.style.borderColor = 'red';
+      }
+
+      function clearError(inputElement) {
+          const errorElement = inputElement.nextElementSibling;
+          if (errorElement && errorElement.classList.contains('error-message')) {
+              errorElement.remove();
+          }
+          inputElement.style.borderColor = '';
+      }
+
+      function isValidEmail(email) {
+          const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return re.test(String(email).toLowerCase());
+      }
+  }
 });
-
-<script>
-  const chatbox = document.getElementById('chatbox');
-  const userInput = document.getElementById('userInput');
-  const sendButton = document.getElementById('sendButton');
-
-  async function fetchContext() {
-    const response = await fetch('context.txt');
-    return await response.text();
-  }
-
-  async function sendMessage(message) {
-    const context = await fetchContext();
-    const response = await puter.ai.chat({
-      system: context,
-      messages: [{ role: 'user', content: message }],
-    });
-    displayMessage('User', message);
-    displayMessage('Assistant', response.message.content);
-  }
-
-  function displayMessage(sender, message) {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('chat-message', sender.toLowerCase());
-    messageElement.textContent = `${sender}: ${message}`;
-    chatbox.appendChild(messageElement);
-    chatbox.scrollTop = chatbox.scrollHeight;
-  }
-
-  function askQuestion(question) {
-    userInput.value = question;
-    sendMessage(question);
-  }
-
-  sendButton.addEventListener('click', () => {
-    const message = userInput.value.trim();
-    if (message) {
-      sendMessage(message);
-      userInput.value = '';
-    }
-  });
-
-  userInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      sendButton.click();
-    }
-  });
-</script>
