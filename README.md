@@ -41,7 +41,7 @@ Our mission is to reduce food waste, support local livelihoods, and provide comm
 
 Experience the EcoHarvest Hub platform and interact with our AI Assistant directly:
 
-**[Visit EcoHarvest Hub Live Site](https://github.com/OketchEdmond/startup-profile.git)**
+[https://github.com/OketchEdmond/startup-profile.git]
 
 
 
@@ -55,19 +55,6 @@ To get started with our AI Assistant, try asking some of these questions:
 * "How can someone support or contact EcoHarvest Hub?"
 * "What's EcoHarvest Hub's vision or long-term goal?"
 
-## 🛠️ How to Run Locally
-
-To get a local copy up and running, follow these simple steps:
-
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/YourGitHubUsername/EcoHarvest-Hub.git](https://github.com/YourGitHubUsername/EcoHarvest-Hub.git)
-    ```
-2.  **Navigate to the project directory:**
-    ```bash
-    cd EcoHarvest-Hub
-    ```
-3.  **Open `index.html`:** Simply open the `index.html` file in your preferred web browser.
 
 ## 🤝 Contact & Support
 
