@@ -41,9 +41,9 @@ Our mission is to reduce food waste, support local livelihoods, and provide comm
 
 Experience the EcoHarvest Hub platform and interact with our AI Assistant directly:
 
-**[Visit EcoHarvest Hub Live Site](YOUR_LIVE_GITHUB_PAGES_URL_HERE)**
+**[Visit EcoHarvest Hub Live Site](https://github.com/OketchEdmond/startup-profile.git)**
 
-*(Please replace `YOUR_LIVE_GITHUB_PAGES_URL_HERE` with the actual URL of your deployed GitHub Pages website.)*
+
 
 ## ❓ Sample AI Assistant Questions
 
