@@ -677,6 +677,7 @@ body {
   align-self: flex-start;
   padding-left: 12px;
 }
+
 .dot {
   width: 8px;
   height: 8px;
@@ -686,6 +687,7 @@ body {
   opacity: 0.6;
   animation: pulse 1.5s infinite ease-in-out;
 }
+
 .dot:nth-child(2) {
   animation-delay: 0.2s;
 }
